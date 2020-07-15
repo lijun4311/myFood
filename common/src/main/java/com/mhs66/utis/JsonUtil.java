@@ -24,23 +24,7 @@ public class JsonUtil implements ILogBase {
 
     private static final ObjectMapper OBJECT_MAPPER = Jackson.getObjectMapper();
 
-    static {
-        //ALWAYS 默认
-        //NON_DEFAULT 属性为默认值不序列化
-        //NON_EMPTY 属性为 空（“”） 或者为 NULL 都不序列化
-        //NON_NULL 属性为NULL 不序列化
 
-        //对象的所有字段全部列入
-        OBJECT_MAPPER.setSerializationInclusion(JsonInclude.Include.ALWAYS);
-        //所有的日期格式都统一为以下的样式，即yyyy-MM-dd HH:mm:ss
-        OBJECT_MAPPER.setDateFormat(new SimpleDateFormat(IDateUtil.STANDARD_FORMAT));
-        //取消默认转换timestamps形式
-        OBJECT_MAPPER.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-        //忽略空Bean转json的错误
-        OBJECT_MAPPER.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-        //忽略 在json字符串中存在，但是在java对象中不存在对应属性的情况。防止错误
-        OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    }
 
     /**
      * 对象序列化为json字符

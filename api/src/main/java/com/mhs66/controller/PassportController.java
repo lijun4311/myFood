@@ -33,7 +33,7 @@ public class PassportController extends BaseController {
     @BusinessObjectNotEmpty
     public WebResult<String> usernameIsExist(@RequestParam String username) {
         // 2. 查找注册的用户名是否存在
-        boolean isExist = userService.queryUsernameIsExist("");
+        boolean isExist = userService.queryUsernameIsExist(username);
         if (isExist) {
             return WebResult.errorMsg("用户名已经存在");
         }
