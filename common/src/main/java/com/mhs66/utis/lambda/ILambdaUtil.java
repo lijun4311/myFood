@@ -11,10 +11,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
- *description:
+ * description:
  * java labda工具类
- *@author 76442
- *@date 2020-07-15 20:13
+ *
+ * @author 76442
+ * @date 2020-07-15 20:13
  */
 public class ILambdaUtil {
     /**
@@ -23,8 +24,9 @@ public class ILambdaUtil {
     static Map<Class, SerializedLambda> CLASS_LAMDBA_CACHE = new ConcurrentHashMap<>();
 
     /***
-     * 转换方法引用为属性名
+     * 根据传入方法引用函数 推断属性名
      * @param fn 类get方法
+     * @param flag 是否驼峰命名转下划线
      * @return 属性名
      */
     public static <T, R> String convertToFieldName(IFunction<T, R> fn, boolean flag) {
@@ -37,13 +39,22 @@ public class ILambdaUtil {
         return flag ? IStringUtil.camelToUnderline(fieldName) : fieldName;
     }
 
+    /**
+     * 根据传入方法引用函数 推断属性名 默认驼峰转下划线
+     *
+     * @param fn 类get方法
+     * @return 属性名 nick_name
+     */
     public static <T, R> String convertToFieldName(IFunction<T, R> fn) {
         return convertToFieldName(fn, true);
     }
 
     /**
      * 获得lambda 序列化对象
+     * SerializedLambda
      *
+     * jdk1.8提供的一个新的类，凡是继承了Serializable的函数式接口的实例都可以获取一个属于它的SerializedLambda实例，
+     * 并且通过反射获取到方法的名称，根据我们标准的java bean的定义规则就可以通过方法名称来获取属性名称。
      * @param fn 传入lambda表达式
      * @return 序列化lambda表达式
      */

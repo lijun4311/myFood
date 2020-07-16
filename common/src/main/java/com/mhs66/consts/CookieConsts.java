@@ -1,27 +1,47 @@
 package com.mhs66.consts;
 
 
-import com.mhs66.utis.PropertiesUtil;
+import lombok.Getter;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
 
 /**
+ * description 全局cookie 配置常量
+ *
  * @author lijun
  * @date 2020-06-16 19:30
- * @description 全局cookie 配置常量
- * @error
  * @since version-1.0
  */
-public interface CookieConsts {
+@Component
+@ConfigurationProperties(prefix = "cookie")
+@PropertySource("classpath:cookie.properties")
+public class CookieConsts {
     /**
      * domain域信息
      */
-    String COOKIE_DOMAIN = PropertiesUtil.getCookieConfig("COOKIE_DOMAIN", "localhost");
+    @Getter
+    private static String domain = "localhost";
     /**
      * path根路径
      */
-    String COOKIE_PATH = PropertiesUtil.getCookieConfig("COOKIE_PATH", "/");
+    @Getter
+    private static String path = "/";
     /**
      * cookie 存储标识
      */
-    String COOKIE_TOKEN = PropertiesUtil.getCookieConfig("COOKIE_TOKEN", "token");
+    @Getter
+    private static String token = "token";
 
+    public void setDomain(String domain) {
+        CookieConsts.domain = domain;
+    }
+
+    public void setPath(String path) {
+        CookieConsts.path = path;
+    }
+
+    public void setToken(String token) {
+        CookieConsts.token = token;
+    }
 }

@@ -22,7 +22,7 @@ public class IBeanUtil extends BeanUtils implements ILogBase {
 
     /**
      * 判断对象是否为null
-     *
+     * null == t
      * @param t   入参
      * @param <T> object
      * @return booleaan
@@ -32,7 +32,7 @@ public class IBeanUtil extends BeanUtils implements ILogBase {
     }
 
     /**
-     * 效验参数是否为空
+     * 效验参数数组是否为blank
      *
      * @param obj 效验参数
      * @return boolean
@@ -112,7 +112,7 @@ public class IBeanUtil extends BeanUtils implements ILogBase {
     }
 
     /**
-     * 判断传入对象指定的属性不为空
+     * 判断传入对象指定的属性集合的对应值不为blank
      *
      * @param f         传入对象
      * @param functions 属性方法数组
@@ -135,6 +135,9 @@ public class IBeanUtil extends BeanUtils implements ILogBase {
     }
 
     /**
+     * 判断传入对象属性是否为blank functions 为忽略属性
+     * flag 为true 则进指定 functions 集合 属性值 参数必须为空 否则返回 false
+     * flag 为 false 不对指定functions 集合 属性值 参数 跳过属性值验证 可为空或者不为空
      * @param f         传入对象
      * @param flag      是否检测忽略属性不为空
      * @param functions 忽略方法数组
@@ -149,22 +152,26 @@ public class IBeanUtil extends BeanUtils implements ILogBase {
         }
         List<String> fileNames = Lists.newArrayList();
         for (IFunction<T, F> function : functions) {
-            fileNames.add(ILambdaUtil.convertToFieldName(function));
+            fileNames.add(ILambdaUtil.convertToFieldName(function,false));
         }
         Field[] files = f.getClass().getDeclaredFields();
         for (Field field : files) {
             field.setAccessible(true);
+            //忽略serialVersionUID属性
             if (IStringUtil.equals("serialVersionUID", field.getName())) {
                 continue;
             }
             try {
+                //判断是否在验证数组中
                 if (fileNames.contains(field.getName())) {
+                    //判断是否验证为空值验证
                     if (flag) {
                         if (!IBeanUtil.isRequired(field.get(f))) {
                             return true;
                         }
                     }
                 } else {
+                    //判断属性值是否为空
                     if (IBeanUtil.isRequired(field.get(f))) {
                         return true;
                     }
@@ -178,7 +185,7 @@ public class IBeanUtil extends BeanUtils implements ILogBase {
     }
 
     /**
-     * 检测对象是否存在该属性
+     * 检测对象是否存在该字符名的属性
      *
      * @param fieldName 属性名
      * @param clazz     类对象

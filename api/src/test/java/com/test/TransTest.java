@@ -1,16 +1,20 @@
 package com.test;
 
-import com.mhs66.service.IUsersService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.mhs66.Application;
+import com.mhs66.consts.SystemConsts;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
-//@RunWith(SpringRunner.class)
-//@SpringBootTest(classes = Application.class)
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = Application.class)
 public class TransTest {
-    @Autowired
-    private IUsersService usersService;
 
-    //@Test
+
+    @Test
     public void test() {
-        //System.out.printf(usersService.list().toString());
+        String a=SystemConsts.getPasswordSalt();
+        System.out.printf(a);
     }
 }

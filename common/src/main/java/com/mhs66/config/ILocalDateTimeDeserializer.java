@@ -25,6 +25,7 @@ public class ILocalDateTimeDeserializer extends JsonDeserializer<LocalDateTime> 
 
     @Override
     public LocalDateTime deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
+        //时间戳处理函数
         long timestamp = jsonParser.getValueAsLong();
         Instant instant = Instant.ofEpochMilli(timestamp);
         return LocalDateTime.ofInstant(instant, ZoneId.systemDefault());

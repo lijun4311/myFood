@@ -9,12 +9,13 @@ import com.mhs66.service.IUsersService;
 import com.mhs66.utis.IDateUtil;
 import com.mhs66.utis.Md5Util;
 import lombok.AllArgsConstructor;
-import org.n3r.idworker.Sid;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * <p>
@@ -29,7 +30,7 @@ import java.time.LocalDateTime;
 public class UsersServiceImpl extends BaseServiceImpl<UsersMapper, Users> implements IUsersService {
 
 
-    private final Sid sid;
+   // private final Sid sid;
 
     @Transactional(propagation = Propagation.SUPPORTS)
     @Override
@@ -41,7 +42,7 @@ public class UsersServiceImpl extends BaseServiceImpl<UsersMapper, Users> implem
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public Users createUser(UserBO userBO) {
-        String userId = sid.nextShort();
+        String userId = UUID.randomUUID().toString();//sid.nextShort();
         Users user = new Users();
         user.setId(userId);
         user.setUsername(userBO.getUsername());

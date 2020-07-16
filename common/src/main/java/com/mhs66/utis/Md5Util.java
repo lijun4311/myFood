@@ -79,7 +79,7 @@ public class Md5Util implements ILogBase {
      * @return 返回 编码字符
      */
     public static String md5EncodeUtf8(String origin) {
-        origin = origin + SystemConsts.PASSWORD_SALT;
+        origin = origin + SystemConsts.getPasswordSalt();
         return md5Encode(origin);
     }
 

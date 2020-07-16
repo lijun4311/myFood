@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 
@@ -32,7 +33,7 @@ public class CookieUtil {
         Cookie[] cks = request.getCookies();
         if (cks != null) {
             for (Cookie ck : cks) {
-                if (IStringUtil.equals(ck.getName(), CookieConsts.COOKIE_TOKEN)) {
+                if (IStringUtil.equals(ck.getName(), CookieConsts.getToken())) {
                     log.debug("return cookieName:{},cookieValue:{}", ck.getName(), ck.getValue());
                     return ck.getValue();
                 }
@@ -48,11 +49,11 @@ public class CookieUtil {
      */
     public static String writeLoginToken(HttpServletResponse response) {
         String token = UUID.randomUUID().toString();
-        Cookie ck = new Cookie(CookieConsts.COOKIE_TOKEN, token);
+        Cookie ck = new Cookie(CookieConsts.getToken(), token);
         //设置共享域
-        ck.setDomain(CookieConsts.COOKIE_DOMAIN);
+        ck.setDomain(CookieConsts.getDomain());
         //设置共享路径
-        ck.setPath(CookieConsts.COOKIE_PATH);
+        ck.setPath(CookieConsts.getPath());
         //设置只读
         ck.setHttpOnly(true);
         //单位是秒。
@@ -73,9 +74,9 @@ public class CookieUtil {
         Cookie[] cks = request.getCookies();
         if (cks != null) {
             for (Cookie ck : cks) {
-                if (IStringUtil.equals(ck.getName(), CookieConsts.COOKIE_TOKEN)) {
-                    ck.setDomain(CookieConsts.COOKIE_DOMAIN);
-                    ck.setPath(CookieConsts.COOKIE_PATH);
+                if (IStringUtil.equals(ck.getName(), CookieConsts.getToken())) {
+                    ck.setDomain(CookieConsts.getDomain());
+                    ck.setPath(CookieConsts.getPath());
                     //设置成0，代表删除此cookie。
                     ck.setMaxAge(0);
                     log.debug("del cookieName:{},cookieValue:{}", ck.getName(), ck.getValue());
@@ -87,260 +88,254 @@ public class CookieUtil {
     }
 
 
-
-
-
     /**
-     *
-     * @Description: 得到Cookie的值, 不编码
-     * @param request
-     * @param cookieName
-     * @return
+     * @param request    请求对象
+     * @param cookieName 设置cookie的name
+     * @return 设置cookie的value
+     * Description: 得到Cookie的值, 不解码
      */
     public static String getCookieValue(HttpServletRequest request, String cookieName) {
-        return getCookieValue(request, cookieName, false);
+        return doGetCookieValue(request, cookieName, false, null);
     }
 
     /**
-     *
-     * @Description: 得到Cookie的值
-     * @param request
-     * @param cookieName
-     * @param isDecoder
-     * @return
+     * @param request    请求对象
+     * @param cookieName 设置cookie的name
+     * @return 设置cookie的value
+     * Description: 得到Cookie的值, 解码
      */
-    public static String getCookieValue(HttpServletRequest request, String cookieName, boolean isDecoder) {
+    public static String getCookieValueDecoder(HttpServletRequest request, String cookieName) {
+        return doGetCookieValue(request, cookieName, true, StandardCharsets.UTF_8.toString());
+    }
+
+    /**
+     * @param request      请求对象
+     * @param cookieName   设置cookie的name
+     * @param decodeString 解码类型
+     * @return 设置cookie的value
+     * Description: 得到Cookie的值, 解码
+     */
+    public static String getCookieValueDecoder(HttpServletRequest request, String cookieName, String decodeString) {
+        return doGetCookieValue(request, cookieName, true, decodeString);
+    }
+
+    /**
+     * Description:设置Cookie的值 不设置生效时间默认浏览器关闭即失效, 也不编码
+     *
+     * @param request     请求对象
+     * @param response    响应对象
+     * @param cookieName  设置cookie的name
+     * @param cookieValue 设置cookie的value
+     */
+    public static void setCookie(HttpServletRequest request, HttpServletResponse response, String cookieName,
+                                 String cookieValue) {
+        setCookie(request, response, cookieName, cookieValue, null);
+    }
+
+    /**
+     * Description: 设置Cookie的值 在指定时间内生效, 但不编码
+     * path为配置文件读取
+     * domain为读取的请求域
+     *
+     * @param request      请求对象
+     * @param response     响应对象
+     * @param cookieName   设置cookie的name
+     * @param cookieValue  设置cookie的value
+     * @param cookieMaxage cookie生效的最大秒数 大于0 则设置
+     *                     cookie生效的最大秒数 设置值大于0, 将cookie存储于本地磁盘, 过期后删除设
+     *                     置值小于0, cookie不会保存于本地, 浏览器会话结束后, 将会删除,
+     *                     设置值等于0, 立即删除cookie
+     *                     为null不设置 默认-1
+     */
+    public static void setCookie(HttpServletRequest request, HttpServletResponse response, String cookieName,
+                                 String cookieValue, Integer cookieMaxage) {
+        doSetCookie(request, response, cookieName, cookieValue, cookieMaxage, false, null);
+    }
+
+
+    /**
+     * Description: 设置Cookie的值 不设置生效时间, 但编码
+     * path为配置文件读取
+     * domain为读取的请求域
+     *
+     * @param request     请求对象
+     * @param response    响应对象
+     * @param cookieName  设置cookie的name
+     * @param cookieValue 设置cookie的value
+     */
+    public static void setCookieEncode(HttpServletRequest request, HttpServletResponse response, String cookieName,
+                                       String cookieValue) {
+        setCookieEncode(request, response, cookieName, cookieValue, null);
+    }
+
+    /**
+     * Description:  设置Cookie的值 在指定时间内生效, 编码参数 默认 UTF-8
+     * path为配置文件读取
+     * domain为读取的请求域
+     *
+     * @param request      请求对象
+     * @param response     响应对象
+     * @param cookieName   设置cookie的name
+     * @param cookieValue  设置cookie的value
+     * @param cookieMaxage cookie生效的最大秒数 大于0 则设置
+     *                     cookie生效的最大秒数 设置值大于0, 将cookie存储于本地磁盘, 过期后删除设
+     *                     置值小于0, cookie不会保存于本地, 浏览器会话结束后, 将会删除,
+     *                     设置值等于0, 立即删除cookie
+     *                     为null不设置 默认-1
+     */
+    public static void setCookieEncode(HttpServletRequest request, HttpServletResponse response, String cookieName,
+                                       String cookieValue, Integer cookieMaxage) {
+        doSetCookie(request, response, cookieName, cookieValue, cookieMaxage, true, StandardCharsets.UTF_8.toString());
+    }
+
+
+    /**
+     * Description: 设置Cookie的值，并使其在指定时间内生效 设置编码格式
+     * path为配置文件读取
+     * domain为读取的请求域
+     *
+     * @param request      请求对象
+     * @param response     响应对象
+     * @param cookieName   设置cookie的name
+     * @param cookieValue  设置cookie的value
+     * @param cookieMaxage cookie生效的最大秒数 大于0 则设置
+     *                     cookie生效的最大秒数 设置值大于0, 将cookie存储于本地磁盘, 过期后删除设
+     *                     置值小于0, cookie不会保存于本地, 浏览器会话结束后, 将会删除,
+     *                     设置值等于0, 立即删除cookie
+     *                     为null不设置 默认-1
+     * @param encodeString 编码格式
+     */
+    public static void setCookieEncode(HttpServletRequest request, HttpServletResponse response, String cookieName,
+                                       String cookieValue, Integer cookieMaxage, String encodeString) {
+        doSetCookie(request, response, cookieName, cookieValue, cookieMaxage, true, encodeString);
+    }
+
+
+    /**
+     * 删除cookie
+     *
+     * @param request    请求
+     * @param response   响应
+     * @param cookieName name
+     */
+    public static void deleteCookie(HttpServletRequest request, HttpServletResponse response,
+                                    String cookieName) {
+        doSetCookie(request, response, cookieName, null, 0, false, null);
+    }
+
+
+    /**
+     * 得到Cookie的值
+     *
+     * @param request      请求头
+     * @param cookieName   name
+     * @param isDecoder    是否编码
+     * @param decodeString 编码格式
+     * @return 值
+     */
+    private static String doGetCookieValue(HttpServletRequest request, String cookieName, boolean isDecoder, String decodeString) {
         Cookie[] cookieList = request.getCookies();
         if (cookieList == null || cookieName == null) {
             return null;
         }
         String retValue = null;
         try {
-            for (int i = 0; i < cookieList.length; i++) {
-                if (cookieList[i].getName().equals(cookieName)) {
+            for (Cookie cookie : cookieList) {
+                if (cookie.getName().equals(cookieName)) {
                     if (isDecoder) {
-                        retValue = URLDecoder.decode(cookieList[i].getValue(), "UTF-8");
+                        retValue = URLDecoder.decode(cookie.getValue(), decodeString);
                     } else {
-                        retValue = cookieList[i].getValue();
+                        retValue = cookie.getValue();
                     }
                     break;
                 }
             }
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            log.error("cookie值解析失败{}", cookieName, e);
         }
         return retValue;
     }
 
+
     /**
+     * Description: 设置Cookie的值，并使其在指定时间内生效
+     * path为配置文件读取
+     * domain为读取的请求域
      *
-     * @Description: 得到Cookie的值
-     * @param request
-     * @param cookieName
-     * @param encodeString
-     * @return
+     * @param request      请求对象
+     * @param response     响应对象
+     * @param cookieName   设置cookie的name
+     * @param cookieValue  设置cookie的value
+     * @param cookieMaxage cookie生效的最大秒数 设置值大于0, 将cookie存储于本地磁盘, 过期后删除设
+     *                     置值小于0, cookie不会保存于本地, 浏览器会话结束后, 将会删除,
+     *                     设置值等于0, 立即删除cookie
+     *                     为null不设置 默认-1
+     * @param isEncode     是否编码
+     * @param encodeString 编码格式
      */
-    public static String getCookieValue(HttpServletRequest request, String cookieName, String encodeString) {
-        Cookie[] cookieList = request.getCookies();
-        if (cookieList == null || cookieName == null) {
-            return null;
-        }
-        String retValue = null;
+    private static void doSetCookie(HttpServletRequest request, HttpServletResponse response,
+                                    String cookieName, String cookieValue, Integer cookieMaxage, boolean isEncode, String encodeString) {
         try {
-            for (int i = 0; i < cookieList.length; i++) {
-                if (cookieList[i].getName().equals(cookieName)) {
-                    retValue = URLDecoder.decode(cookieList[i].getValue(), encodeString);
-                    break;
-                }
-            }
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return retValue;
-    }
-
-    /**
-     *
-     * @Description: 设置Cookie的值 不设置生效时间默认浏览器关闭即失效,也不编码
-     * @param request
-     * @param response
-     * @param cookieName
-     * @param cookieValue
-     */
-    public static void setCookie(HttpServletRequest request, HttpServletResponse response, String cookieName,
-                                 String cookieValue) {
-        setCookie(request, response, cookieName, cookieValue, -1);
-    }
-
-    /**
-     *
-     * @Description: 设置Cookie的值 在指定时间内生效,但不编码
-     * @param request
-     * @param response
-     * @param cookieName
-     * @param cookieValue
-     * @param cookieMaxage
-     */
-    public static void setCookie(HttpServletRequest request, HttpServletResponse response, String cookieName,
-                                 String cookieValue, int cookieMaxage) {
-        setCookie(request, response, cookieName, cookieValue, cookieMaxage, false);
-    }
-
-    /**
-     *
-     * @Description: 设置Cookie的值 不设置生效时间,但编码
-     * 在服务器被创建，返回给客户端，并且保存客户端
-     * 如果设置了SETMAXAGE(int seconds)，会把cookie保存在客户端的硬盘中
-     * 如果没有设置，会默认把cookie保存在浏览器的内存中
-     * 一旦设置setPath()：只能通过设置的路径才能获取到当前的cookie信息
-     * @param request
-     * @param response
-     * @param cookieName
-     * @param cookieValue
-     * @param isEncode
-     */
-    public static void setCookie(HttpServletRequest request, HttpServletResponse response, String cookieName,
-                                 String cookieValue, boolean isEncode) {
-        setCookie(request, response, cookieName, cookieValue, -1, isEncode);
-    }
-
-    /**
-     *
-     * @Description: 设置Cookie的值 在指定时间内生效, 编码参数
-     * @param request
-     * @param response
-     * @param cookieName
-     * @param cookieValue
-     * @param cookieMaxage
-     * @param isEncode
-     */
-    public static void setCookie(HttpServletRequest request, HttpServletResponse response, String cookieName,
-                                 String cookieValue, int cookieMaxage, boolean isEncode) {
-        doSetCookie(request, response, cookieName, cookieValue, cookieMaxage, isEncode);
-    }
-
-    /**
-     *
-     * @Description: 设置Cookie的值 在指定时间内生效, 编码参数(指定编码)
-     * @param request
-     * @param response
-     * @param cookieName
-     * @param cookieValue
-     * @param cookieMaxage
-     * @param encodeString
-     */
-    public static void setCookie(HttpServletRequest request, HttpServletResponse response, String cookieName,
-                                 String cookieValue, int cookieMaxage, String encodeString) {
-        doSetCookie(request, response, cookieName, cookieValue, cookieMaxage, encodeString);
-    }
-
-    /**
-     *
-     * @Description: 删除Cookie带cookie域名
-     * @param request
-     * @param response
-     * @param cookieName
-     */
-    public static void deleteCookie(HttpServletRequest request, HttpServletResponse response,
-                                    String cookieName) {
-        doSetCookie(request, response, cookieName, null, -1, false);
-//        doSetCookie(request, response, cookieName, "", -1, false);
-    }
-
-
-    /**
-     *
-     * @Description: 设置Cookie的值，并使其在指定时间内生效
-     * @param request
-     * @param response
-     * @param cookieName
-     * @param cookieValue
-     * @param cookieMaxage	cookie生效的最大秒数
-     * @param isEncode
-     */
-    private static final void doSetCookie(HttpServletRequest request, HttpServletResponse response,
-                                          String cookieName, String cookieValue, int cookieMaxage, boolean isEncode) {
-        try {
+            //值为null则转为空值
             if (cookieValue == null) {
                 cookieValue = "";
             } else if (isEncode) {
-                cookieValue = URLEncoder.encode(cookieValue, "utf-8");
-            }
-            Cookie cookie = new Cookie(cookieName, cookieValue);
-            if (cookieMaxage > 0)
-                cookie.setMaxAge(cookieMaxage);
-            if (null != request) {// 设置域名的cookie
-                String domainName = getDomainName(request);
-                log.info("========== domainName: {} ==========", domainName);
-                if (!"localhost".equals(domainName)) {
-                    cookie.setDomain(domainName);
-                }
-            }
-            cookie.setPath("/");
-            response.addCookie(cookie);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     *
-     * @Description: 设置Cookie的值，并使其在指定时间内生效
-     * @param request
-     * @param response
-     * @param cookieName
-     * @param cookieValue
-     * @param cookieMaxage	cookie生效的最大秒数
-     * @param encodeString
-     */
-    private static final void doSetCookie(HttpServletRequest request, HttpServletResponse response,
-                                          String cookieName, String cookieValue, int cookieMaxage, String encodeString) {
-        try {
-            if (cookieValue == null) {
-                cookieValue = "";
-            } else {
+                //字符集编码
                 cookieValue = URLEncoder.encode(cookieValue, encodeString);
             }
+            //创建cookie
             Cookie cookie = new Cookie(cookieName, cookieValue);
-            if (cookieMaxage > 0)
+            //生效时间大于0则设置
+            if (null != cookieMaxage) {
                 cookie.setMaxAge(cookieMaxage);
-            if (null != request) {// 设置域名的cookie
+            }
+
+            //判断请求对象是否为空 设置域名的cookie
+            if (null != request) {
                 String domainName = getDomainName(request);
-                log.info("========== domainName: {} ==========", domainName);
                 if (!"localhost".equals(domainName)) {
                     cookie.setDomain(domainName);
                 }
             }
-            cookie.setPath("/");
+            cookie.setPath(CookieConsts.getPath());
             response.addCookie(cookie);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("cookie值设置失败 name{} value{} isEncode{} encodeString{}", cookieName, cookieValue, isEncode, encodeString, e);
         }
     }
 
-    /**
-     *
-     * @Description: 得到cookie的域名
-     * @return
-     */
-    private static final String getDomainName(HttpServletRequest request) {
-        String domainName = null;
 
+    /**
+     * Description: 得到cookie的域名
+     *
+     * @return domain信息
+     */
+    private static String getDomainName(HttpServletRequest request) {
+        String domainName = null;
+        //获得请求路径 全路径 http://localhost:8080/test/test.jsp
         String serverName = request.getRequestURL().toString();
-        if (serverName == null || serverName.equals("")) {
-            domainName = "";
+
+        if (IStringUtil.isBlank(serverName)) {
+            domainName = IStringUtil.EMPTY;
         } else {
+            //字符串转换为小写
             serverName = serverName.toLowerCase();
+            //字符串的子字符串 第7位 http:// 协议号后面的开始  localhost:8080/test/test.jsp
             serverName = serverName.substring(7);
+            //截取后字符串的第一个 / 位置
             final int end = serverName.indexOf("/");
+            //截取域名  localhost:8080
             serverName = serverName.substring(0, end);
+            //判断:前面是否有值 拆分端口获取端口之前数据  localhost
             if (serverName.indexOf(":") > 0) {
-                String[] ary = serverName.split("\\:");
+                String[] ary = serverName.split(":");
                 serverName = ary[0];
             }
-
+            //转换域名为数组 [localhost]
             final String[] domains = serverName.split("\\.");
+            //判断域名类型
             int len = domains.length;
+            //大于3段切不是ip
             if (len > 3 && !isIp(serverName)) {
                 // www.xxx.com.cn
                 domainName = "." + domains[len - 3] + "." + domains[len - 2] + "." + domains[len - 1];
@@ -354,27 +349,44 @@ public class CookieUtil {
         return domainName;
     }
 
-    public static String trimSpaces(String IP){//去掉IP字符串前后所有的空格
-        while(IP.startsWith(" ")){
-            IP= IP.substring(1,IP.length()).trim();
+    /**
+     * 去掉IP字符串前后所有的空格
+     *
+     * @param iP 传入ip
+     * @return ip
+     */
+    public static String trimSpaces(String iP) {
+        while (iP.startsWith(IStringUtil.SPACE)) {
+            iP = iP.substring(1).trim();
         }
-        while(IP.endsWith(" ")){
-            IP= IP.substring(0,IP.length()-1).trim();
+        while (iP.endsWith(IStringUtil.SPACE)) {
+            iP = iP.substring(0, iP.length() - 1).trim();
         }
-        return IP;
+        return iP;
     }
 
-    public static boolean isIp(String IP){//判断是否是一个IP
+    /**
+     * 判断是否为ip
+     *
+     * @param iP 传入域名
+     * @return 布尔
+     */
+    public static boolean isIp(String iP) {
         boolean b = false;
-        IP = trimSpaces(IP);
-        if(IP.matches("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}")){
-            String s[] = IP.split("\\.");
-            if(Integer.parseInt(s[0])<255)
-                if(Integer.parseInt(s[1])<255)
-                    if(Integer.parseInt(s[2])<255)
-                        if(Integer.parseInt(s[3])<255)
+        iP = trimSpaces(iP);
+        if (iP.matches("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}")) {
+            String[] s = iP.split("\\.");
+            if (Integer.parseInt(s[0]) < 255) {
+                if (Integer.parseInt(s[1]) < 255) {
+                    if (Integer.parseInt(s[2]) < 255) {
+                        if (Integer.parseInt(s[3]) < 255) {
                             b = true;
+                        }
+                    }
+                }
+            }
         }
         return b;
     }
+
 }

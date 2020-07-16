@@ -7,23 +7,24 @@ import java.time.format.DateTimeFormatter;
 
 
 /**
- *description:
- *时间处理工具类 依赖jar包 joda.time
- *@author 76442
- *@date 2020-07-15 21:05
+ * description:
+ * 时间处理工具类 依赖jar包 joda.time
+ *
+ * @author 76442
+ * @date 2020-07-15 21:05
  */
 public class IDateUtil {
 
     /**
-     *  标准时间格式
+     * 标准时间格式
      */
     public static final String STANDARD_FORMAT = "yyyy-MM-dd HH:mm:ss";
     /**
-     *  年月日时间格式
+     * 年月日时间格式
      */
     public static final String DAY_FORMAT = "yyyy-MM-dd";
     /**
-     *  时分秒时间格式
+     * 时分秒时间格式
      */
     public static final String TIME_FORMAT = "HH:mm:ss";
 
@@ -34,7 +35,6 @@ public class IDateUtil {
      * @param formatStr   格式 默认 STANDARD_FORMAT
      * @return Date对象;
      */
-
     public static LocalDateTime strToDate(String dateTimeStr, String formatStr) {
         if (IStringUtil.isBlank(dateTimeStr)) {
             return null;
@@ -47,7 +47,7 @@ public class IDateUtil {
     /**
      * data对象转化时间格式
      *
-     * @param date 时间对象
+     * @param date      时间对象
      * @param formatStr 格式 默认 STANDARD_FORMAT
      * @return 时间
      */

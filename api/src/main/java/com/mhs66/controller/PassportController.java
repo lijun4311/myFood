@@ -11,20 +11,23 @@ import com.mhs66.utis.JsonUtil;
 import com.mhs66.utis.Md5Util;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.util.Map;
 
 @Api(value = "注册登录", tags = {"用于注册登录的相关接口"})
 @RestController
 @RequestMapping("passport")
-@AllArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class PassportController extends BaseController {
-    @Autowired
+
     private final IUsersService userService;
 
 
@@ -32,53 +35,41 @@ public class PassportController extends BaseController {
     @GetMapping("/usernameIsExist")
     @BusinessObjectNotEmpty
     public WebResult<String> usernameIsExist(@RequestParam String username) {
-        // 2. 查找注册的用户名是否存在
-        boolean isExist = userService.queryUsernameIsExist(username);
-        if (isExist) {
+        //查找注册的用户名是否存在
+        if (userService.queryUsernameIsExist(username)) {
             return WebResult.errorMsg("用户名已经存在");
         }
-        // 3. 请求成功，用户名没有重复
         return WebResult.ok();
     }
 
     @ApiOperation(value = "用户注册", notes = "用户注册", httpMethod = "POST")
     @PostMapping("/regist")
-    public WebResult<Users> regist(@RequestBody UserBO userBO) {
-
+    public WebResult<?> regist(@RequestBody @Valid UserBO userBO, BindingResult result) {
+        // 判断BindingResult是否保存错误的验证信息，如果有，则直接return
+        if (result.hasErrors()) {
+            Map<String, String> errorMap = getErrors(result);
+            return WebResult.illegalParamMap(errorMap);
+        }
         String username = userBO.getUsername();
         String password = userBO.getPassword();
         String confirmPwd = userBO.getConfirmPassword();
 
-        // 0. 判断用户名和密码必须不为空
-        if (StringUtils.isBlank(username) ||
-                StringUtils.isBlank(password) ||
-                StringUtils.isBlank(confirmPwd)) {
-            return WebResult.errorMsg("用户名或密码不能为空");
-        }
-
-        // 1. 查询用户名是否存在
-        boolean isExist = userService.queryUsernameIsExist(username);
-        if (isExist) {
+        //  查询用户名是否存在
+        if (userService.queryUsernameIsExist(username)) {
             return WebResult.errorMsg("用户名已经存在");
         }
-
-        // 2. 密码长度不能少于6位
-        if (password.length() < 6) {
-            return WebResult.errorMsg("密码长度不能少于6");
-        }
-
-        // 3. 判断两次密码是否一致
+        //  判断两次密码是否一致
         if (!password.equals(confirmPwd)) {
             return WebResult.errorMsg("两次密码输入不一致");
         }
 
-        // 4. 实现注册
+        // 实现注册
         Users userResult = userService.createUser(userBO);
 
         userResult = setNullProperty(userResult);
 
-        CookieUtil.setCookie(request, response, "user",
-                JsonUtil.obj2String(userResult), true);
+        CookieUtil.setCookieEncode(request, response, "user",
+                JsonUtil.objToString(userResult));
 
         // TODO 生成用户token，存入redis会话
         // TODO 同步购物车数据
@@ -111,8 +102,8 @@ public class PassportController extends BaseController {
 
         userResult = setNullProperty(userResult);
 
-        CookieUtil.setCookie(request, response, "user",
-                JsonUtil.obj2String(userResult), true);
+        CookieUtil.setCookieEncode(request, response, "user",
+                JsonUtil.objToString(userResult));
 
 
         // TODO 生成用户token，存入redis会话

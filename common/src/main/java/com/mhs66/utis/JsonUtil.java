@@ -1,15 +1,10 @@
 package com.mhs66.utis;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.mhs66.config.ILogBase;
 import com.mhs66.config.Jackson;
-
-import java.text.SimpleDateFormat;
 
 /**
  * description:
@@ -33,7 +28,7 @@ public class JsonUtil implements ILogBase {
      * @param <T> 泛型
      * @return string
      */
-    public static <T> String obj2String(T obj) {
+    public static <T> String objToString(T obj) {
         if (obj == null) {
             return null;
         }
@@ -45,7 +40,12 @@ public class JsonUtil implements ILogBase {
         }
     }
 
-    public static <T> String obj2StringPretty(T obj) {
+    /**
+     * 对象序列化为json字符 格式化
+     * @param obj 对象
+     * @return str
+     */
+    public static <T> String objToStringPretty(T obj) {
         if (obj == null) {
             return null;
         }
@@ -57,8 +57,13 @@ public class JsonUtil implements ILogBase {
         }
     }
 
-
-    public static <T> T string2Obj(String str, Class<T> clazz) {
+    /**
+     * json字符转对象
+     * @param str json
+     * @param clazz 对象类型
+     * @return T
+     */
+    public static <T> T stringToObj(String str, Class<T> clazz) {
         if (IStringUtil.isEmpty(str) || clazz == null) {
             return null;
         }
@@ -71,8 +76,14 @@ public class JsonUtil implements ILogBase {
         }
     }
 
-
-    public static <T> T string2Obj(String str, TypeReference<T> typeReference) {
+    /**
+     *  json字符转对象
+     * 使用TypeReference可以明确的指定反序列化的类型
+     * @param str json
+     * @param typeReference 指定类型
+     * @return  typeReference 指定类型
+     */
+    public static <T> T stringToObj(String str, TypeReference<T> typeReference) {
         if (IStringUtil.isEmpty(str) || typeReference == null) {
             return null;
         }
@@ -84,8 +95,14 @@ public class JsonUtil implements ILogBase {
         }
     }
 
-
-    public static <T> T string2Obj(String str, Class<?> collectionClass, Class<?>... elementClasses) {
+    /**
+     *  json 字符转集合
+     * @param str json
+     * @param collectionClass 集合类型
+     * @param elementClasses 集合元素类型
+     * @return T
+     */
+    public static <T> T stringToObj(String str, Class<?> collectionClass, Class<?>... elementClasses) {
         JavaType javaType = OBJECT_MAPPER.getTypeFactory().constructParametricType(collectionClass, elementClasses);
         try {
             return OBJECT_MAPPER.readValue(str, javaType);

@@ -21,7 +21,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 /**
- * description:
+ * description: 自定义 jackson 配置
  *
  * @author 76442
  * @date 2020-07-15 21:18
@@ -31,6 +31,7 @@ public class Jackson {
     private static final ObjectMapper OBJECT_MAPPER;
 
     static {
+        //自定义时间处理模版
         JavaTimeModule javaTimeModule = new JavaTimeModule();
         javaTimeModule.addSerializer(LocalDateTime.class, ILocalDateTimeSerializer.INSTANCE);
         javaTimeModule.addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern(IDateUtil.DAY_FORMAT)));

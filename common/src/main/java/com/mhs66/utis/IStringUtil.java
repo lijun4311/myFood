@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 public class IStringUtil extends StringUtils {
 
     /**
-     * 判断参数组 是否不为空
+     * 判断字符数组都不为blank
      *
      * @param strs 参数组
      * @return 布尔
@@ -26,21 +26,6 @@ public class IStringUtil extends StringUtils {
             }
         }
         return true;
-    }
-
-    /**
-     * 判断参数组是否有为空
-     *
-     * @param strs 参数组
-     * @return 布尔值
-     */
-    public static boolean isBlanks(String... strs) {
-        for (String str : strs) {
-            if (isBlank(str)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**

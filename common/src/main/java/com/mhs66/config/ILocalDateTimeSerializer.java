@@ -24,6 +24,7 @@ public class ILocalDateTimeSerializer extends JsonSerializer<LocalDateTime> {
 
     @Override
     public void serialize(LocalDateTime localDateTime, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
+        //时间戳处理函数
         long timestamp = localDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
         jsonGenerator.writeNumber(timestamp);
     }

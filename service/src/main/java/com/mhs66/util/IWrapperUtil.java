@@ -35,7 +35,7 @@ public class IWrapperUtil {
                 IStringUtil.camelToUnderline(iPageBo.getAccurateSearchKey()),
                 iPageBo.getAccurateSearchValue());
         queryWrapper.orderBy(IBeanUtil.isFieldExist(iPageBo.getOrderBy(), tClass),
-                iPageBo.getIsAsc() == SystemConsts.ASCEND,
+                iPageBo.getIsAsc() == SystemConsts.getAscend(),
                 IStringUtil.camelToUnderline(iPageBo.getOrderBy()));
 
         return queryWrapper;

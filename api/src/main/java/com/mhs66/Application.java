@@ -3,7 +3,6 @@ package com.mhs66;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
 
 /**
  *description:
@@ -13,9 +12,11 @@ import org.springframework.context.annotation.ComponentScan;
  */
 @SpringBootApplication
 @MapperScan("com.mhs66.mapper")
-@ComponentScan(basePackages = {"com.mhs66", "org.n3r.idworker"})
 public class Application {
-
+    /**
+     * 启动入口
+     * @param args 启动参数
+     */
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
