@@ -1,6 +1,7 @@
 package com.mhs66.service;
 
 import com.mhs66.pojo.Items;
+import com.mhs66.pojo.vo.CommentLevelCountsVO;
 
 /**
  * <p>
@@ -11,5 +12,10 @@ import com.mhs66.pojo.Items;
  * @since 2020-07-15
  */
 public interface IItemsService extends BaseService<Items> {
-
+    /**
+     * 根据商品id查询商品的评价等级数量
+     * @param itemId id
+     *
+     */
+    CommentLevelCountsVO queryCommentCounts(String itemId);
 }

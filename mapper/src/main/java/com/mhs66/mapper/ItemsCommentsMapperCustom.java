@@ -3,6 +3,7 @@ package com.mhs66.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.mhs66.pojo.ItemsComments;
+import com.mhs66.pojo.vo.CommentLevelCountsVO;
 import com.mhs66.pojo.vo.MyCommentVO;
 import org.apache.ibatis.annotations.Param;
 
@@ -20,4 +21,5 @@ public interface ItemsCommentsMapperCustom extends BaseMapper<ItemsComments> {
 
     public List<MyCommentVO> queryMyComments(@Param("paramsMap") Map<String, Object> map);
 
+    CommentLevelCountsVO queryCommentCounts(String itemId);
 }

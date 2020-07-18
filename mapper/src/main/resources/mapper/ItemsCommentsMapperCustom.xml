@@ -70,4 +70,37 @@
     desc
   </select>
 
+    <resultMap id="leveComments" type="com.mhs66.pojo.vo.CommentLevelCountsVO">
+        <id column="totalCounts" property="totalCounts"/>
+        <result column="badCounts" property="badCounts"/>
+        <result column="goodCounts" property="goodCounts"/>
+        <result column="normalCounts" property="normalCounts"/>
+
+    </resultMap>
+
+    <select id="queryCommentCounts" parameterType="string" resultMap="leveComments">
+    SELECT
+        ic.id as commentId,
+        ic.content as content,
+        ic.create_time as createTime,
+        ic.item_id as itemId,
+        ic.item_name as itemName,
+        ic.sepc_name as sepcName,
+        ii.url as itemImg
+    FROM
+        items_comments ic
+    LEFT JOIN
+        items_img ii
+    ON
+        ic.item_id = ii.item_id
+    WHERE
+        ic.user_id = #{paramsMap.userId}
+    AND
+        ii.is_main = 1
+    ORDER BY
+        ic.create_time
+    desc
+  </select>
+
+
 </mapper>
