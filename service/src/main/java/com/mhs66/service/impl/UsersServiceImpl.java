@@ -30,7 +30,7 @@ import java.util.UUID;
 public class UsersServiceImpl extends BaseServiceImpl<UsersMapper, Users> implements IUsersService {
 
 
-    @Transactional(rollbackFor = Exception.class, propagation = Propagation.SUPPORTS)
+
     @Override
     @ArgsNotEmpty
     public boolean queryUsernameIsExist(String username) {
@@ -60,7 +60,7 @@ public class UsersServiceImpl extends BaseServiceImpl<UsersMapper, Users> implem
         return user;
     }
 
-    @Transactional(rollbackFor = Exception.class, propagation = Propagation.SUPPORTS)
+
     @Override
     public Users queryUserForLogin(String username, String password) {
         return this.getOne(Wrappers.lambdaQuery(Users.class).eq(Users::getUsername, username).eq(Users::getPassword, password));

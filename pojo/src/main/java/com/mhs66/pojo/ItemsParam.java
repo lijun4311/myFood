@@ -15,7 +15,7 @@ import java.io.Serializable;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class ItemsParam extends BaseEntity implements Serializable {
+public class ItemsParam extends DateEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

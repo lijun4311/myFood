@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class OrderStatus extends BaseEntity implements Serializable {
+public class OrderStatus extends DateEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

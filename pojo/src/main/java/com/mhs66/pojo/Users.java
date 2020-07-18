@@ -20,7 +20,7 @@ import java.time.LocalDate;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class Users extends BaseEntity implements Serializable {
+public class Users extends DateEntity implements Serializable {
 
 
 

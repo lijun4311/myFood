@@ -26,10 +26,10 @@ public class AsyncManager {
     /**
      * 单例模式
      */
-    private static final AsyncManager ME = new AsyncManager();
+    private static final AsyncManager me = new AsyncManager();
 
     public static AsyncManager me() {
-        return ME;
+        return me;
     }
 
     /**

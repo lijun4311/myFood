@@ -16,7 +16,7 @@ import java.math.BigDecimal;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class ItemsSpec extends BaseEntity implements Serializable {
+public class ItemsSpec extends DateEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

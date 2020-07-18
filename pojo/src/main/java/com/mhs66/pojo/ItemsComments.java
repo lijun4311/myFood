@@ -16,7 +16,7 @@ import java.io.Serializable;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class ItemsComments extends BaseEntity implements Serializable {
+public class ItemsComments extends DateEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

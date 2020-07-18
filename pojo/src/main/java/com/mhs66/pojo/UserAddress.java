@@ -15,7 +15,7 @@ import java.io.Serializable;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class UserAddress extends BaseEntity implements Serializable {
+public class UserAddress extends DateEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

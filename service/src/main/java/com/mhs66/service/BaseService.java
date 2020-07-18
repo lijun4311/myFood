@@ -1,5 +1,6 @@
 package com.mhs66.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -25,8 +26,16 @@ public interface BaseService<T> extends IService<T> {
 
     /**
      * 通用分页查询
-     * @param iPageBo
-     * @return
+     * @param iPageBo 分页对象
+     * @return 分页对象
      */
     Page<T> getPage(IPageBo iPageBo);
+
+    /**
+     * 链式查询 lambda 式
+     *
+     *
+     * @return LambdaQueryWrapper
+     */
+    LambdaQueryWrapper iLambdaQuery();
 }
