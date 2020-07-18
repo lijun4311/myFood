@@ -9,11 +9,12 @@ import lombok.Data;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+
 /**
- * @Author lijun
- * @Date 2020-05-19 19:38
- * @Description  dao基类
- * @Since version-1.0
+ *description:
+ * 实体类基类
+ *@author 76442
+ *@date 2020-07-18 16:11
  */
 @Data
 public abstract  class BaseEntity implements Serializable {

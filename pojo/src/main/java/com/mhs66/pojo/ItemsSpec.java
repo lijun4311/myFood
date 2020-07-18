@@ -15,7 +15,7 @@ import java.math.BigDecimal;
  * @since 2020-07-15
  */
 @Data
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 public class ItemsSpec extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;

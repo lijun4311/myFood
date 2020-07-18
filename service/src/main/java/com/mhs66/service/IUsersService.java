@@ -1,10 +1,7 @@
 package com.mhs66.service;
 
-import com.mhs66.annotation.ArgsNotEmpty;
 import com.mhs66.pojo.Users;
 import com.mhs66.pojo.bo.UserBO;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * <p>
@@ -15,12 +12,25 @@ import org.springframework.transaction.annotation.Transactional;
  * @since 2020-07-15
  */
 public interface IUsersService extends BaseService<Users> {
-    @ArgsNotEmpty
+    /**
+     * 查询用户名是否重复
+     * @param username 用户名
+     * @return boolean
+     */
     boolean queryUsernameIsExist(String username);
 
-    @Transactional(propagation = Propagation.REQUIRED)
+    /**
+     * 创建用户
+     * @param userBO 用户数据对象
+     * @return 用户对象
+     */
     Users createUser(UserBO userBO);
 
-    @Transactional(propagation = Propagation.SUPPORTS)
+    /**
+     * 用户登录
+     * @param username 用户名
+     * @param password 密码
+     * @return 用户对象
+     */
     Users queryUserForLogin(String username, String password);
 }

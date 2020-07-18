@@ -1,8 +1,8 @@
-package com.mhs66.utis.lambda;
+package com.mhs66.utils.lambda;
 
 
-import com.mhs66.utis.IStringUtil;
-import com.mhs66.utis.lambda.functional.IFunction;
+import com.mhs66.utils.IStringUtil;
+import com.mhs66.utils.lambda.functional.IFunction;
 
 import java.lang.invoke.SerializedLambda;
 import java.lang.reflect.Method;

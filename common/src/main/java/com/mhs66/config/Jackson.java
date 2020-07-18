@@ -9,7 +9,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
-import com.mhs66.utis.IDateUtil;
+import com.mhs66.utils.IDateUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -48,8 +48,6 @@ public class Jackson {
         //NON_EMPTY 属性为 空（“”） 或者为 NULL 都不序列化
         //NON_NULL 属性为NULL 不序列化
         OBJECT_MAPPER.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        //对象的所有字段全部列入
-        OBJECT_MAPPER.setSerializationInclusion(JsonInclude.Include.ALWAYS);
         //所有的日期格式都统一为以下的样式，即yyyy-MM-dd HH:mm:ss
         OBJECT_MAPPER.setDateFormat(new SimpleDateFormat(IDateUtil.STANDARD_FORMAT));
         //取消默认转换timestamps形式

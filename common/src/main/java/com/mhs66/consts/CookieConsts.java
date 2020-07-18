@@ -15,20 +15,20 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @ConfigurationProperties(prefix = "cookie")
-@PropertySource("classpath:cookie.properties")
+@PropertySource("classpath:system.properties")
 public class CookieConsts {
     /**
-     * domain域信息
+     * domain域信息 默认localhost
      */
     @Getter
     private static String domain = "localhost";
     /**
-     * path根路径
+     * path根路径 默认 /
      */
     @Getter
     private static String path = "/";
     /**
-     * cookie 存储标识
+     * cookie 存储标识 默认 token
      */
     @Getter
     private static String token = "token";

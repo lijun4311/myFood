@@ -14,7 +14,7 @@ import java.io.Serializable;
  * @since 2020-07-15
  */
 @Data
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 public class Orders extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;

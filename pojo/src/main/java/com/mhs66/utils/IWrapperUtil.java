@@ -1,10 +1,8 @@
-package com.mhs66.util;
+package com.mhs66.utils;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.mhs66.consts.SystemConsts;
+import com.mhs66.consts.PageConsts;
 import com.mhs66.pojo.bo.IPageBo;
-import com.mhs66.utis.IBeanUtil;
-import com.mhs66.utis.IStringUtil;
 
 
 /**
@@ -35,7 +33,7 @@ public class IWrapperUtil {
                 IStringUtil.camelToUnderline(iPageBo.getAccurateSearchKey()),
                 iPageBo.getAccurateSearchValue());
         queryWrapper.orderBy(IBeanUtil.isFieldExist(iPageBo.getOrderBy(), tClass),
-                iPageBo.getIsAsc() == SystemConsts.getAscend(),
+                iPageBo.getIsAsc() == PageConsts.getAscend(),
                 IStringUtil.camelToUnderline(iPageBo.getOrderBy()));
 
         return queryWrapper;

@@ -3,7 +3,7 @@ package com.mhs66.aspect;
 
 import com.mhs66.annotation.ArgsNotEmpty;
 import com.mhs66.annotation.ArgsNotNull;
-import com.mhs66.utis.IBeanUtil;
+import com.mhs66.utils.IBeanUtil;
 import org.apache.commons.lang3.ArrayUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;

@@ -1,4 +1,4 @@
-package com.mhs66.utis;
+package com.mhs66.utils;
 
 import com.mhs66.consts.CookieConsts;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +22,7 @@ import java.util.UUID;
  */
 @Slf4j
 public class CookieUtil {
+
 
     /**
      * 获得登录token
@@ -327,8 +328,9 @@ public class CookieUtil {
             //截取域名  localhost:8080
             serverName = serverName.substring(0, end);
             //判断:前面是否有值 拆分端口获取端口之前数据  localhost
-            if (serverName.indexOf(":") > 0) {
-                String[] ary = serverName.split(":");
+            final String colon = ":";
+            if (serverName.indexOf(colon) > 0) {
+                String[] ary = serverName.split(colon);
                 serverName = ary[0];
             }
             //转换域名为数组 [localhost]
@@ -336,15 +338,18 @@ public class CookieUtil {
             //判断域名类型
             int len = domains.length;
             //大于3段切不是ip
-            if (len > 3 && !isIp(serverName)) {
-                // www.xxx.com.cn
-                domainName = "." + domains[len - 3] + "." + domains[len - 2] + "." + domains[len - 1];
-            } else if (len <= 3 && len > 1) {
-                // xxx.com or xxx.cn
-                domainName = "." + domains[len - 2] + "." + domains[len - 1];
+            StringBuilder domainNameSb = new StringBuilder();
+            if (!isIp(serverName) && len > 1) {
+                for (int i = 1; i < domains.length; i++) {
+                    domainNameSb.append(domains[i]);
+                    if (i != domains.length - 1) {
+                        domainNameSb.append(".");
+                    }
+                }
             } else {
-                domainName = serverName;
+                domainNameSb.append(serverName);
             }
+            domainName = domainNameSb.toString();
         }
         return domainName;
     }

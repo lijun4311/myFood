@@ -1,4 +1,4 @@
-package com.mhs66.utis.lambda.functional;
+package com.mhs66.utils.lambda.functional;
 
 import java.io.Serializable;
 import java.util.function.Function;

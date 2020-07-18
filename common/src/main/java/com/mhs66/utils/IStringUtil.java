@@ -1,4 +1,4 @@
-package com.mhs66.utis;
+package com.mhs66.utils;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -61,5 +61,36 @@ public class IStringUtil extends StringUtils {
         }
         matcher.appendTail(sb);
         return sb.toString();
+    }
+    /**
+     * 是否包含字符串
+     *
+     * @param str 验证字符串
+     * @param strs 字符串组
+     * @return 包含返回true
+     */
+    public static boolean inStringIgnoreCase(String str, String... strs)
+    {
+        if (str != null && strs != null)
+        {
+            for (String s : strs)
+            {
+                if (str.equalsIgnoreCase(trim(s)))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    /**
+     * 获取参数不为空值
+     *
+     * @param value defaultValue 要判断的value
+     * @return value 返回值
+     */
+    public static <T> T nvl(T value, T defaultValue)
+    {
+        return value != null ? value : defaultValue;
     }
 }

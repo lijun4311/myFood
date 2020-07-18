@@ -1,7 +1,7 @@
-package com.mhs66.utis;
+package com.mhs66.utils;
 
 import com.mhs66.config.ILogBase;
-import com.mhs66.consts.SystemConsts;
+import com.mhs66.consts.PageConsts;
 import org.apache.commons.lang3.StringUtils;
 
 import java.nio.charset.StandardCharsets;
@@ -79,7 +79,7 @@ public class Md5Util implements ILogBase {
      * @return 返回 编码字符
      */
     public static String md5EncodeUtf8(String origin) {
-        origin = origin + SystemConsts.getPasswordSalt();
+        origin = origin + PageConsts.getPasswordSalt();
         return md5Encode(origin);
     }
 

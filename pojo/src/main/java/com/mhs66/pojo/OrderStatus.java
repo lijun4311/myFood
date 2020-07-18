@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
  * @since 2020-07-15
  */
 @Data
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 public class OrderStatus extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;

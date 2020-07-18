@@ -1,6 +1,7 @@
 package com.mhs66.pojo.bo;
 
-import com.mhs66.consts.SystemConsts;
+
+import com.mhs66.consts.PageConsts;
 import lombok.Data;
 
 /**
@@ -11,9 +12,9 @@ import lombok.Data;
  */
 @Data
 public class IPageBo {
-    int current = SystemConsts.getPageCurrent();
-    int size = SystemConsts.getPageSize();
-    int isAsc = SystemConsts.getAscend();
+    int current = PageConsts.getPageCurrent();
+    int size = PageConsts.getPageSize();
+    int isAsc = PageConsts.getAscend();
     String orderBy;
     String fuzzySearchKey;
     String fuzzySearchValue;

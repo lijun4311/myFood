@@ -1,8 +1,9 @@
-package com.mhs66.utis;
+package com.mhs66.utils;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.mhs66.config.ILogBase;
 import com.mhs66.config.Jackson;
 
@@ -18,7 +19,7 @@ import com.mhs66.config.Jackson;
 public class JsonUtil implements ILogBase {
 
     private static final ObjectMapper OBJECT_MAPPER = Jackson.getObjectMapper();
-
+    private static final ObjectWriter OBJECT_WRITER = OBJECT_MAPPER.writerWithDefaultPrettyPrinter();
 
 
     /**
@@ -42,6 +43,7 @@ public class JsonUtil implements ILogBase {
 
     /**
      * 对象序列化为json字符 格式化
+     *
      * @param obj 对象
      * @return str
      */
@@ -59,7 +61,8 @@ public class JsonUtil implements ILogBase {
 
     /**
      * json字符转对象
-     * @param str json
+     *
+     * @param str   json
      * @param clazz 对象类型
      * @return T
      */
@@ -77,11 +80,12 @@ public class JsonUtil implements ILogBase {
     }
 
     /**
-     *  json字符转对象
+     * json字符转对象
      * 使用TypeReference可以明确的指定反序列化的类型
-     * @param str json
+     *
+     * @param str           json
      * @param typeReference 指定类型
-     * @return  typeReference 指定类型
+     * @return typeReference 指定类型
      */
     public static <T> T stringToObj(String str, TypeReference<T> typeReference) {
         if (IStringUtil.isEmpty(str) || typeReference == null) {
@@ -96,10 +100,11 @@ public class JsonUtil implements ILogBase {
     }
 
     /**
-     *  json 字符转集合
-     * @param str json
+     * json 字符转集合
+     *
+     * @param str             json
      * @param collectionClass 集合类型
-     * @param elementClasses 集合元素类型
+     * @param elementClasses  集合元素类型
      * @return T
      */
     public static <T> T stringToObj(String str, Class<?> collectionClass, Class<?>... elementClasses) {
@@ -111,4 +116,24 @@ public class JsonUtil implements ILogBase {
             return null;
         }
     }
+
+    public static String marshal(Object value) {
+        try {
+            return OBJECT_WRITER.writeValueAsString(value);
+        } catch (Exception e) {
+            log.warn("Parse Object to String error", e);
+            return null;
+        }
+    }
+
+    public static <T> T unmarshal(String str, Class<T> valueType) {
+        try {
+            return OBJECT_MAPPER.readValue(str, valueType);
+        } catch (Exception e) {
+            log.warn("Parse Object to String error", e);
+            return null;
+        }
+
+    }
+
 }

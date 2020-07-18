@@ -1,9 +1,9 @@
-package com.mhs66.utis;
+package com.mhs66.utils;
 
 import com.google.common.collect.Lists;
 import com.mhs66.config.ILogBase;
-import com.mhs66.utis.lambda.ILambdaUtil;
-import com.mhs66.utis.lambda.functional.IFunction;
+import com.mhs66.utils.lambda.ILambdaUtil;
+import com.mhs66.utils.lambda.functional.IFunction;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.ObjectUtils;
 
