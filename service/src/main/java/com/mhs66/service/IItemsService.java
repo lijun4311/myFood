@@ -1,7 +1,13 @@
 package com.mhs66.service;
 
 import com.mhs66.pojo.Items;
+import com.mhs66.pojo.bo.PageBo;
 import com.mhs66.pojo.vo.CommentLevelCountsVO;
+import com.mhs66.pojo.vo.ItemCommentVO;
+import com.mhs66.pojo.vo.PageVo;
+import com.mhs66.pojo.vo.ShopcartVO;
+
+import java.util.List;
 
 /**
  * <p>
@@ -18,4 +24,15 @@ public interface IItemsService extends BaseService<Items> {
      *
      */
     CommentLevelCountsVO queryCommentCounts(String itemId);
+
+
+    PageVo<ItemCommentVO> queryPagedComments(String itemId, Integer level, int page, int pageSize);
+
+    PageVo searhItems(PageBo pageBo);
+
+    PageVo searhItems(Integer catId, PageBo pageBo);
+
+    List<ShopcartVO> queryItemsBySpecIds(String itemSpecIds);
+
+    void decreaseItemSpecStock(String itemSpecId, int buyCounts);
 }

@@ -40,8 +40,17 @@ public class BusinessObjectAspect {
         Method method = signature.getMethod();
         BusinessObjectNotEmpty webParamNotEmpty = method.getAnnotation(BusinessObjectNotEmpty.class);
         if (webParamNotEmpty != null) {
-            if (IBeanUtil.isRequired(args)) {
-                return WebResult.illegalParam();
+            for (Object arg : args) {
+                if (webParamNotEmpty.strict()) {
+                    if (IBeanUtil.isValueBankExclude(args)) {
+                        return WebResult.illegalParam();
+                    }
+                } else {
+                    if (IBeanUtil.isRequired(arg)) {
+                        return WebResult.illegalParam();
+                    }
+                }
+
             }
         } else {
             Annotation[][] parameterAnnotations = method.getParameterAnnotations();
@@ -68,8 +77,14 @@ public class BusinessObjectAspect {
                 }
                 for (Annotation annotation : parameterAnnotation) {
                     if (annotation instanceof BusinessObjectNotEmpty) {
-                        if (IBeanUtil.isRequired(paramValue)) {
-                            return WebResult.illegalParam();
+                        if (((BusinessObjectNotEmpty) annotation).strict()) {
+                            if (IBeanUtil.isValueBankExclude(paramValue)) {
+                                return WebResult.illegalParam();
+                            }
+                        } else {
+                            if (IBeanUtil.isRequired(paramValue)) {
+                                return WebResult.illegalParam();
+                            }
                         }
                     }
                 }

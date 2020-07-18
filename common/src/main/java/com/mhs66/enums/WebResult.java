@@ -9,7 +9,7 @@ import com.mhs66.config.ILogBase;
  *@author 76442
  *@date 2020-07-15 20:33
  */
-public enum WebResultEnum {
+public enum WebResult {
     //请求成功
     SUCCESS(200, "SUCCESS"),
     //请求错误
@@ -23,7 +23,7 @@ public enum WebResultEnum {
     private final String desc;
 
 
-    WebResultEnum(int code, String desc) {
+    WebResult(int code, String desc) {
         this.code = code;
         this.desc = desc;
     }
@@ -37,7 +37,7 @@ public enum WebResultEnum {
     }
 
     public static String codeOf(int code) {
-        for (WebResultEnum restEnum : values()) {
+        for (WebResult restEnum : values()) {
             if (restEnum.getCode() == code) {
                 return restEnum.desc;
             }

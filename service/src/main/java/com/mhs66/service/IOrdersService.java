@@ -1,6 +1,8 @@
 package com.mhs66.service;
 
 import com.mhs66.pojo.Orders;
+import com.mhs66.pojo.bo.SubmitOrderBO;
+import com.mhs66.pojo.vo.OrderVO;
 
 
 /**
@@ -13,4 +15,7 @@ import com.mhs66.pojo.Orders;
  */
 public interface IOrdersService extends BaseService<Orders> {
 
+    OrderVO createOrder(SubmitOrderBO submitOrderBO);
+
+    void updateOrderStatus(String merchantOrderId, Integer type);
 }

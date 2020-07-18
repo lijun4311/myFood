@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
  * @date 2020-07-15 21:48
  */
 
-public class BaseController implements ILogBase {
+public abstract class BaseController implements ILogBase {
     @Autowired
     protected  HttpServletRequest request;
 

@@ -4,7 +4,7 @@
 #
 ############################################################
 server:
-  port: 8089
+  port: 8088
 ############################################################
 #
 # 配置数据源信息
@@ -29,6 +29,19 @@ spring:
       max-lifetime: 1800000           # 连接的生命时长（毫秒），超时而且没被使用则被释放（retired），默认:30分钟 1800000ms
       connection-test-query: SELECT 1
 
+
+  ############################################################
+  #
+  #  redis 配置
+  #
+  ############################################################
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password: 4311
+    client-name: lijun
+
+
 ############################################################
 #
 # mybatis-plus 配置
@@ -38,4 +51,18 @@ mybatis-plus:
   mapper-locations: classpath:mapper/*.xml
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-    auto-mapping-behavior: full
+
+
+############################################################
+#
+# mybatis pagehelper 配置
+#
+############################################################
+
+# 分页插件配置
+pagehelper:
+  helperDialect: mysql
+  supportMethodsArguments: true
+
+
+

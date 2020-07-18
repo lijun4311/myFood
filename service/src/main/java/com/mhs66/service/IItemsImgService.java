@@ -12,4 +12,5 @@ import com.mhs66.pojo.ItemsImg;
  */
 public interface IItemsImgService extends BaseService<ItemsImg> {
 
+    String queryItemMainImgById(String itemId);
 }

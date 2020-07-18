@@ -17,5 +17,5 @@ import java.lang.annotation.*;
 @Inherited
 @Documented
 public @interface BusinessObjectNotEmpty {
-
+    boolean strict() default false;
 }

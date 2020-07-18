@@ -15,5 +15,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class UserAddressServiceImpl extends BaseServiceImpl<UserAddressMapper, UserAddress> implements IUserAddressService {
+    @Override
+    public UserAddress queryUserAddres(String userId, String addressId) {
+        return getOne(lambdaQuery().eq(UserAddress::getUserId, userId).eq(UserAddress::getId, addressId));
+    }
 
 }

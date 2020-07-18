@@ -22,7 +22,7 @@ public class PageConsts {
      * 分页默认当前页
      */
     @Getter
-    private static int pageCurrent=1;
+    private static int page=1;
     /**
      * 分页总页数
      */
@@ -43,8 +43,8 @@ public class PageConsts {
         PageConsts.passwordSalt = passwordSalt;
     }
 
-    public void setPageCurrent(String pageCurrent) {
-        PageConsts.pageCurrent = Integer.parseInt(pageCurrent);
+    public  void setPage(int page) {
+        PageConsts.page = page;
     }
 
     public void setPageSize(String pageSize) {

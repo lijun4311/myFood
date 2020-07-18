@@ -13,4 +13,5 @@ import com.mhs66.pojo.UserAddress;
  */
 public interface IUserAddressService extends BaseService<UserAddress> {
 
+    UserAddress queryUserAddres(String userId, String addressId);
 }

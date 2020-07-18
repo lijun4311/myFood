@@ -1,7 +1,6 @@
 package com.mhs66;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.mhs66.enums.WebResultEnum;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -41,11 +40,11 @@ public class WebResult<T> implements Serializable {
         this.msg = msg;
     }
 
-    public static <T> WebResult<T> isSuccess(boolean success) {
+    public static <T> WebResult isSuccess(boolean success) {
         if (success) {
-            return new WebResult<>(WebResultEnum.SUCCESS.getCode());
+            return new WebResult(com.mhs66.enums.WebResult.SUCCESS.getCode());
         } else {
-            return new WebResult<>(WebResultEnum.ERROR.getCode(), WebResultEnum.ERROR.getDesc());
+            return new WebResult(com.mhs66.enums.WebResult.ERROR.getCode(), com.mhs66.enums.WebResult.ERROR.getDesc());
         }
     }
 
@@ -63,50 +62,50 @@ public class WebResult<T> implements Serializable {
     }
 
 
-    public static <T> WebResult<T> ok() {
-        return new WebResult<>(WebResultEnum.SUCCESS.getCode());
+    public static <T> WebResult ok() {
+        return new WebResult(com.mhs66.enums.WebResult.SUCCESS.getCode());
     }
 
-    public static <T> WebResult<T> okMsg(String msg) {
-        return new WebResult<>(WebResultEnum.SUCCESS.getCode(), msg);
+    public static <T> WebResult okMsg(String msg) {
+        return new WebResult(com.mhs66.enums.WebResult.SUCCESS.getCode(), msg);
     }
 
-    public static <T> WebResult<T> okData(T data) {
-        return new WebResult<>(WebResultEnum.SUCCESS.getCode(), data);
+    public static <T> WebResult okData(T data) {
+        return new WebResult(com.mhs66.enums.WebResult.SUCCESS.getCode(), data);
     }
 
-    public static <T> WebResult<T> okDataMsg(String msg, T data) {
-        return new WebResult<>(WebResultEnum.SUCCESS.getCode(), msg, data);
-    }
-
-
-    public static <T> WebResult<T> error() {
-        return new WebResult<>(WebResultEnum.ERROR.getCode(), WebResultEnum.ERROR.getDesc());
+    public static <T> WebResult okDataMsg(String msg, T data) {
+        return new WebResult(com.mhs66.enums.WebResult.SUCCESS.getCode(), msg, data);
     }
 
 
-    public static <T> WebResult<T> illegalParam() {
-        return new WebResult<>(WebResultEnum.ILLEGAL_PARAM.getCode(), WebResultEnum.ILLEGAL_PARAM.getDesc());
+    public static <T> WebResult error() {
+        return new WebResult(com.mhs66.enums.WebResult.ERROR.getCode(), com.mhs66.enums.WebResult.ERROR.getDesc());
     }
 
-    public static WebResult<Map<String, String>> illegalParamMap(Map<String, String> map) {
-        return new WebResult<>(WebResultEnum.ILLEGAL_PARAM.getCode(), WebResultEnum.ILLEGAL_PARAM.getDesc(), map);
+
+    public static <T> WebResult illegalParam() {
+        return new WebResult(com.mhs66.enums.WebResult.ILLEGAL_PARAM.getCode(), com.mhs66.enums.WebResult.ILLEGAL_PARAM.getDesc());
     }
 
-    public static <T> WebResult<T> noLgoin() {
-        return new WebResult<>(WebResultEnum.NOLOGIN.getCode(), WebResultEnum.NOLOGIN.getDesc());
+    public static WebResult illegalParamMap(Map<String, String> map) {
+        return new WebResult(com.mhs66.enums.WebResult.ILLEGAL_PARAM.getCode(), com.mhs66.enums.WebResult.ILLEGAL_PARAM.getDesc(), map);
     }
 
-    public static <T> WebResult<T> errorMsg(String errorMessage) {
-        return new WebResult<>(WebResultEnum.ERROR.getCode(), errorMessage);
+    public static <T> WebResult noLgoin() {
+        return new WebResult(com.mhs66.enums.WebResult.NOLOGIN.getCode(), com.mhs66.enums.WebResult.NOLOGIN.getDesc());
     }
 
-    public static <T> WebResult<T> errorDateMsg(String errorMessage, T data) {
-        return new WebResult<>(WebResultEnum.ERROR.getCode(), errorMessage, data);
+    public static <T> WebResult errorMsg(String errorMessage) {
+        return new WebResult(com.mhs66.enums.WebResult.ERROR.getCode(), errorMessage);
     }
 
-    public static <T> WebResult<T> errorCodeMsg(int errorCode, String errorMessage) {
-        return new WebResult<>(errorCode, errorMessage);
+    public static <T> WebResult errorDateMsg(String errorMessage, T data) {
+        return new WebResult(com.mhs66.enums.WebResult.ERROR.getCode(), errorMessage, data);
+    }
+
+    public static <T> WebResult errorCodeMsg(int errorCode, String errorMessage) {
+        return new WebResult(errorCode, errorMessage);
     }
 
 

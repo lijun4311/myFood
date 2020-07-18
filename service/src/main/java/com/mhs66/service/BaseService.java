@@ -1,11 +1,12 @@
 package com.mhs66.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.mhs66.annotation.ArgsNotEmpty;
-import com.mhs66.pojo.bo.IPageBo;
+import com.mhs66.pojo.bo.PageBo;
+import com.mhs66.pojo.vo.PageVo;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Author lijun
@@ -15,27 +16,17 @@ import com.mhs66.pojo.bo.IPageBo;
  */
 public interface BaseService<T> extends IService<T> {
     /**
-     * 通用分页查询默认
-     * @param iPageBo 前端分页对象
-     * @param queryWrapper 查询构造器 可以为 null
-     * @param tClass 分页对象class
-     * @return 分页数据
-     */
-    @ArgsNotEmpty("queryWrapper")
-    Page<T> getPage(IPageBo iPageBo, QueryWrapper<T> queryWrapper, Class<T> tClass);
-
-    /**
-     * 通用分页查询
-     * @param iPageBo 分页对象
-     * @return 分页对象
-     */
-    Page<T> getPage(IPageBo iPageBo);
-
-    /**
      * 链式查询 lambda 式
      *
      *
      * @return LambdaQueryWrapper
      */
     LambdaQueryWrapper iLambdaQuery();
+
+
+    <R> PageVo<R> setPagedVo(List<R> list, Integer page);
+
+    void startPage(PageBo bo);
+
+    Map<String, Object> toMap(PageBo pageBo);
 }
