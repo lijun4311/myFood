@@ -3,10 +3,13 @@ package com.mhs66.service.impl;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.conditions.update.LambdaUpdateChainWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.toolkit.ChainWrappers;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.mhs66.annotation.ArgsNotEmpty;
@@ -60,10 +63,12 @@ public class BaseServiceImpl<M extends BaseMapper<T>, T> extends ServiceImpl<M, 
         vo.setRecords(pageList.getTotal());
         return vo;
     }
+
     @Override
-    public void startPage(PageBo bo){
+    public void startPage(PageBo bo) {
         PageHelper.startPage(bo.getPage(), bo.getPageSize());
     }
+
     @Override
     public Map<String, Object> toMap(PageBo pageBo) {
         Map<String, Object> map = new HashMap<>();
@@ -76,4 +81,20 @@ public class BaseServiceImpl<M extends BaseMapper<T>, T> extends ServiceImpl<M, 
 
         return map;
     }
+
+    @Override
+    public LambdaQueryWrapper<T> lambdaQuery(T entity) {
+        return new LambdaQueryWrapper(entity);
+    }
+
+    @Override
+    public LambdaUpdateWrapper<T> iLambdaUpdate() {
+        return Wrappers.lambdaUpdate();
+    }
+
+    @Override
+    public LambdaUpdateWrapper<T> lambdaUpdate(T entity) {
+        return new LambdaUpdateWrapper<>(entity);
+    }
+
 }

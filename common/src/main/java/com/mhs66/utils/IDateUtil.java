@@ -27,6 +27,10 @@ public class IDateUtil {
      * 时分秒时间格式
      */
     public static final String TIME_FORMAT = "HH:mm:ss";
+    /**
+     * 文件路径名格式
+     */
+    public static String DATE_PATTERN = "yyyyMMddHHmmss";
 
     /**
      * 日期字符串转化时间对象

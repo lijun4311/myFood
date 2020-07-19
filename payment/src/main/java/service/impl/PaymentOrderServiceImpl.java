@@ -58,7 +58,7 @@ public class PaymentOrderServiceImpl extends BaseServiceImpl<OrdersMapper, Order
     public String updateOrderPaid(String merchantOrderId, Integer paidAmount) {
 
         Orders paidOrder = new Orders();
-        paidOrder.setPayStatus(PaymentStatus.PAID.type);
+        paidOrder.setPayStatus(PaymentStatus.SUCCESS.type);
         paidOrder.setAmount(paidAmount);
         paidOrder.setMerchantOrderId(merchantOrderId);
         update(Wrappers.lambdaUpdate(paidOrder));

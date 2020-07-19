@@ -22,5 +22,10 @@
             <artifactId>alipay-sdk-java</artifactId>
             <version>3.7.110.ALL</version>
         </dependency>
+        <dependency>
+            <groupId>com.thoughtworks.xstream</groupId>
+            <artifactId>xstream</artifactId>
+            <version>1.4.9</version>
+        </dependency>
     </dependencies>
 </project>

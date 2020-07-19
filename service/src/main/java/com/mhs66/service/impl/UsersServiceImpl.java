@@ -10,6 +10,7 @@ import com.mhs66.service.IUsersService;
 import com.mhs66.utils.IBeanUtil;
 import com.mhs66.utils.Md5Util;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +29,6 @@ import java.util.UUID;
 @Service
 @AllArgsConstructor
 public class UsersServiceImpl extends BaseServiceImpl<UsersMapper, Users> implements IUsersService {
-
 
 
     @Override
@@ -64,5 +64,46 @@ public class UsersServiceImpl extends BaseServiceImpl<UsersMapper, Users> implem
     @Override
     public Users queryUserForLogin(String username, String password) {
         return this.getOne(Wrappers.lambdaQuery(Users.class).eq(Users::getUsername, username).eq(Users::getPassword, password));
+    }
+
+    /**
+     * 用户信息字段屏蔽
+     *
+     * @param userResult 用户对象
+     */
+    @Override
+    public void setNullProperty(Users userResult) {
+        userResult.setPassword(null);
+        userResult.setMobile(null);
+        userResult.setEmail(null);
+        userResult.setCreateTime(null);
+        userResult.setUpdateTime(null);
+        userResult.setBirthday(null);
+    }
+
+    @Override
+    public Users updateUserInfo(String userId, UserBO centerUserBO) {
+
+        Users updateUser = new Users();
+        IBeanUtil.copyProperties(centerUserBO, updateUser);
+        updateUser.setId(userId);
+        updateUser.setUpdateTime(LocalDateTime.now());
+        updateUser.setPassword(null);
+        updateById(updateUser);
+
+        return getById(userId);
+    }
+
+
+    @Override
+    public Users updateUserFace(String userId, String faceUrl) {
+        Users updateUser = new Users();
+        updateUser.setId(userId);
+        updateUser.setFace(faceUrl);
+        updateUser.setUpdateTime(LocalDateTime.now());
+
+        updateById(updateUser);
+
+        return getById(userId);
     }
 }

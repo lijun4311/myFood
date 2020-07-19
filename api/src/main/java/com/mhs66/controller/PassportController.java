@@ -37,21 +37,6 @@ public class PassportController extends BaseController {
     private final IUsersService userService;
 
 
-    /**
-     * 用户信息字段屏蔽
-     *
-     * @param userResult 用户对象
-     */
-    private void setNullProperty(Users userResult) {
-        userResult.setPassword(null);
-        userResult.setMobile(null);
-        userResult.setEmail(null);
-        userResult.setCreateTime(null);
-        userResult.setUpdateTime(null);
-        userResult.setBirthday(null);
-    }
-
-
     @ApiOperation(value = "用户名是否存在", notes = "用户名是否存在", httpMethod = "GET")
     @GetMapping("/usernameIsExist")
     @BusinessObjectNotEmpty
@@ -80,13 +65,14 @@ public class PassportController extends BaseController {
         }
         // 实现注册
         Users userResult = userService.createUser(userBO);
-        setNullProperty(userResult);
+        userService.setNullProperty(userResult);
         CookieUtil.setCookieEncode(request, response, UserConsts.getUserPrefix(),
                 JsonUtil.objToString(userResult));
         // TODO 生成用户token，存入redis会话
         // TODO 同步购物车数据
         return WebResult.ok();
     }
+
     @Log(title = "用户登录", businessType = BusinessType.GRANT)
     @ApiOperation(value = "用户登录", notes = "用户登录", httpMethod = "POST")
     @PostMapping("/login")
@@ -101,7 +87,7 @@ public class PassportController extends BaseController {
         if (userResult == null) {
             return WebResult.errorMsg("用户名或密码不正确");
         }
-        setNullProperty(userResult);
+        userService.setNullProperty(userResult);
         CookieUtil.setCookieEncode(request, response, UserConsts.getUserPrefix(),
                 JsonUtil.objToString(userResult));
 

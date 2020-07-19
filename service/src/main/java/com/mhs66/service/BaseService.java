@@ -1,6 +1,7 @@
 package com.mhs66.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.mhs66.pojo.bo.PageBo;
 import com.mhs66.pojo.vo.PageVo;
@@ -15,9 +16,10 @@ import java.util.Map;
  * @Since version-1.0
  */
 public interface BaseService<T> extends IService<T> {
+    LambdaQueryWrapper<T> lambdaQuery(T entity);
+
     /**
      * 链式查询 lambda 式
-     *
      *
      * @return LambdaQueryWrapper
      */
@@ -29,4 +31,8 @@ public interface BaseService<T> extends IService<T> {
     void startPage(PageBo bo);
 
     Map<String, Object> toMap(PageBo pageBo);
+
+    LambdaUpdateWrapper<T> iLambdaUpdate();
+
+    LambdaUpdateWrapper<T> lambdaUpdate(T entity);
 }

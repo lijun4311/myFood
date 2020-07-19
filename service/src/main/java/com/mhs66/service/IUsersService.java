@@ -33,4 +33,21 @@ public interface IUsersService extends BaseService<Users> {
      * @return 用户对象
      */
     Users queryUserForLogin(String username, String password);
+
+    void setNullProperty(Users userResult);
+
+    /**
+     * 修改用户信息
+     * @param userId
+     * @param userBO
+     */
+    public Users updateUserInfo(String userId, UserBO userBO);
+
+    /**
+     * 用户头像更新
+     * @param userId
+     * @param faceUrl
+     * @return
+     */
+    public Users updateUserFace(String userId, String faceUrl);
 }
