@@ -26,6 +26,8 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @Author lijun
@@ -78,7 +80,6 @@ public class BaseServiceImpl<M extends BaseMapper<T>, T> extends ServiceImpl<M, 
         if (IStringUtil.isNotEmpty(pageBo.getSort())) {
             map.put(ILambdaUtil.getFieldName(PageBo::getSort), pageBo.getSort());
         }
-
         return map;
     }
 

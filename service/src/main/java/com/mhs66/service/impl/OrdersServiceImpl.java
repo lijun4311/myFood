@@ -6,6 +6,7 @@ import com.mhs66.enums.BusinessStatus;
 import com.mhs66.enums.PaymentStatus;
 import com.mhs66.mapper.OrdersMapper;
 import com.mhs66.pojo.*;
+import com.mhs66.pojo.bo.ShopcartBO;
 import com.mhs66.pojo.bo.SubmitOrderBO;
 import com.mhs66.pojo.vo.MerchantOrdersVO;
 import com.mhs66.pojo.vo.OrderVO;
@@ -17,7 +18,9 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -40,7 +43,7 @@ public class OrdersServiceImpl extends BaseServiceImpl<OrdersMapper, Orders> imp
 
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     @Override
-    public OrderVO createOrder(SubmitOrderBO submitOrderBO) {
+    public OrderVO createOrder(SubmitOrderBO submitOrderBO,List<ShopcartBO> shopcartList) {
 
         String userId = submitOrderBO.getUserId();
         String addressId = submitOrderBO.getAddressId();
@@ -80,13 +83,19 @@ public class OrdersServiceImpl extends BaseServiceImpl<OrdersMapper, Orders> imp
 
 
         // 2. 循环根据itemSpecIds保存订单商品信息表
-        String itemSpecIdArr[] = itemSpecIds.split(",");
-        Integer totalAmount = 0;    // 商品原价累计
-        Integer realPayAmount = 0;  // 优惠后的实际支付价格累计
+        String[] itemSpecIdArr = itemSpecIds.split(",");
+        // 商品原价累计
+        int totalAmount = 0;
+        // 优惠后的实际支付价格累计
+        int realPayAmount = 0;
+
+        List<ShopcartBO> toBeRemovedShopcatdList = new ArrayList<>();
         for (String itemSpecId : itemSpecIdArr) {
+            ShopcartBO cartItem = getBuyCountsFromShopcart(shopcartList, itemSpecId);
 
             // TODO 整合redis后，商品购买的数量重新从redis的购物车中获取
-            int buyCounts = 1;
+            int buyCounts = cartItem.getBuyCounts();
+            toBeRemovedShopcatdList.add(cartItem);
 
             // 2.1 根据规格id，查询规格的具体信息，主要获取价格
             ItemsSpec itemSpec = iItemsSpecService.getById(itemSpecId);
@@ -138,7 +147,7 @@ public class OrdersServiceImpl extends BaseServiceImpl<OrdersMapper, Orders> imp
         OrderVO orderVO = new OrderVO();
         orderVO.setOrderId(orderId);
         orderVO.setMerchantOrdersVO(merchantOrdersVO);
-
+        orderVO.setToBeRemovedShopcatdList(toBeRemovedShopcatdList);
         return orderVO;
     }
 
@@ -150,6 +159,22 @@ public class OrdersServiceImpl extends BaseServiceImpl<OrdersMapper, Orders> imp
         paidStatus.setPayTime(LocalDateTime.now());
         orderStatusService.update(Wrappers.lambdaQuery(paidStatus));
 
+    }
+
+    /**
+     *  获得选择商品
+     *
+     * @param shopcartList 购物车列表
+     * @param specId 商品id
+     * @return 商品
+     */
+    private ShopcartBO getBuyCountsFromShopcart(List<ShopcartBO> shopcartList, String specId) {
+        for (ShopcartBO cart : shopcartList) {
+            if (cart.getSpecId().equals(specId)) {
+                return cart;
+            }
+        }
+        return null;
     }
 
 }

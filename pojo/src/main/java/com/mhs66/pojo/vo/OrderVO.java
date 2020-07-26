@@ -1,6 +1,10 @@
 package com.mhs66.pojo.vo;
 
+import com.mhs66.pojo.bo.ShopcartBO;
 import lombok.Data;
+
+import java.util.List;
+
 /**
  *description:
  *
@@ -12,6 +16,7 @@ public class OrderVO {
 
     private String orderId;
     private MerchantOrdersVO merchantOrdersVO;
+    private List<ShopcartBO> toBeRemovedShopcatdList;
 
 
 }

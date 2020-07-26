@@ -3,6 +3,7 @@ package com.mhs66.controller;
 
 import com.mhs66.WebResult;
 import com.mhs66.annotation.BusinessObjectNotEmpty;
+import com.mhs66.consts.RedisPrefix;
 import com.mhs66.enums.BusinessStatus;
 import com.mhs66.pojo.Carousel;
 import com.mhs66.pojo.Category;
@@ -10,15 +11,20 @@ import com.mhs66.pojo.vo.CategoryVO;
 import com.mhs66.pojo.vo.NewItemsVO;
 import com.mhs66.service.ICarouselService;
 import com.mhs66.service.ICategoryService;
+import com.mhs66.utils.JsonUtil;
+import com.mhs66.utils.RedisOperator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.core.util.JsonUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Api(value = "首页", tags = {"首页展示的相关接口"})
@@ -28,6 +34,8 @@ import java.util.List;
 public class IndexController extends BaseController {
 
 
+    private final RedisOperator redisOperator;
+
     private final ICarouselService carouselService;
 
 
@@ -36,7 +44,17 @@ public class IndexController extends BaseController {
     @ApiOperation(value = "获取首页轮播图列表", notes = "获取首页轮播图列表", httpMethod = "GET")
     @GetMapping("/carousel")
     public WebResult carousel() {
-        List<Carousel> list = carouselService.queryAll(BusinessStatus.YES.type);
+
+
+        List<Carousel> list;
+        String carouselStr = redisOperator.get(RedisPrefix.CAROUSEL);
+        if (StringUtils.isBlank(carouselStr)) {
+            list = carouselService.queryAll(BusinessStatus.YES.type);
+            redisOperator.set(RedisPrefix.CAROUSEL, JsonUtil.objToString(list));
+        } else {
+            list = JsonUtil.stringToObj(carouselStr, List.class, Carousel.class);
+        }
+
         return WebResult.okData(list);
     }
 
@@ -48,7 +66,18 @@ public class IndexController extends BaseController {
     @ApiOperation(value = "获取商品分类(一级分类)", notes = "获取商品分类(一级分类)", httpMethod = "GET")
     @GetMapping("/cats")
     public WebResult cats() {
-        List<Category> list = categoryService.queryAllRootLevelCat();
+
+        List<Category> list;
+        String catsStr = redisOperator.get(RedisPrefix.CATS);
+        if (StringUtils.isBlank(catsStr)) {
+            list = categoryService.queryAllRootLevelCat();
+            redisOperator.set(RedisPrefix.CATS, JsonUtil.objToString(list));
+        } else {
+            list = JsonUtil.stringToObj(catsStr, List.class, Carousel.class);
+
+        }
+
+
         return WebResult.okData(list);
     }
 
@@ -59,7 +88,14 @@ public class IndexController extends BaseController {
             @ApiParam(name = "rootCatId", value = "一级分类id", required = true)
             @PathVariable Integer rootCatId) {
 
-        List<CategoryVO> list = categoryService.getSubCatList(rootCatId);
+        List<CategoryVO> list;
+        String catsStr = redisOperator.get(RedisPrefix.SUBCAT);
+        if (StringUtils.isBlank(catsStr)) {
+            list = categoryService.getSubCatList(rootCatId);
+            redisOperator.set(RedisPrefix.SUBCAT, JsonUtil.objToString(list));
+        } else {
+            list = JsonUtil.stringToObj(catsStr, List.class, Carousel.class);
+        }
         return WebResult.okData(list);
     }
 
